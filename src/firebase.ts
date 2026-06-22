@@ -1,30 +1,44 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth';
 import { getFirestore, doc, getDocFromServer } from 'firebase/firestore';
-import firebaseAppletConfig from '../firebase-applet-config.json';
 
-// Allow Vercel or other platforms' environment variables to override the config
-// Allow Vercel or other platforms' environment variables to override the config
+// Your web app's explicit Firebase configuration for Vercel
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || firebaseAppletConfig.apiKey,
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || firebaseAppletConfig.authDomain,
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || firebaseAppletConfig.projectId,
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || firebaseAppletConfig.storageBucket,
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || firebaseAppletConfig.messagingSenderId,
-  appId: import.meta.env.VITE_FIREBASE_APP_ID || firebaseAppletConfig.appId,
-  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID || firebaseAppletConfig.measurementId,
-  firestoreDatabaseId: import.meta.env.VITE_FIREBASE_FIRESTORE_DATABASE_ID || firebaseAppletConfig.firestoreDatabaseId || '(default)'
+  apiKey: "AIzaSyCUoZUgoRtsKj9Zj18dVgp54B-Y8rgXRXg",
+  authDomain: "heirloom-recipes-7bc6f.firebaseapp.com",
+  projectId: "heirloom-recipes-7bc6f",
+  storageBucket: "heirloom-recipes-7bc6f.firebasestorage.app",
+  messagingSenderId: "1018790312518",
+  appId: "1:1018790312518:web:c6416964a1677a8331e847",
+  measurementId: "G-071DVNSH68"
 };
 
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
-export const db = getFirestore(app, firebaseConfig.firestoreDatabaseId);
+export const db = getFirestore(app);
 export const auth = getAuth(app);
+
+// Authentication Setup
 export const googleProvider = new GoogleAuthProvider();
 
-export const signIn = () => signInWithPopup(auth, googleProvider);
-export const logOut = () => signOut(auth);
+export const signIn = async () => {
+  try {
+    await signInWithPopup(auth, googleProvider);
+  } catch (error) {
+    console.error("Error signing in with Google: ", error);
+    throw error;
+  }
+};
 
-// Connection test
+export const logOut = async () => {
+  try {
+    await signOut(auth);
+  } catch (error) {
+    console.error("Error signing out: ", error);
+  }
+};
+
+// Firestore connection test
 async function testConnection() {
   try {
     await getDocFromServer(doc(db, 'test', 'connection'));
