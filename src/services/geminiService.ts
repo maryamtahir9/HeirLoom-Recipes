@@ -234,28 +234,11 @@ const CURATED_FOOD_IMAGES = [
 ];
 
 
-export async function generateRecipeImage(title: string, category?: string): Promise<string | null> {
-  try {
-    const imageList = CURATED_FOOD_IMAGES.map((img, index) => `${index}: ${img.tags}`).join('\n');
-    
-    const response = await getAi().models.generateContent({
-      model: "gemini-3-flash-preview",
-      contents: `I have a recipe titled "${title}" in the category "${category || 'Other'}". 
-      Below is a list of high-quality food images with their tags. 
-      Pick the index of the image that best matches this recipe.
-      
-      IMAGES:
-      ${imageList}
-      
-      Output ONLY the index number, nothing else.`,
-    });
-    
-    const indexStr = response.text.trim();
-    const index = parseInt(indexStr);
-    
-    if (!isNaN(index) && index >= 0 && index < CURATED_FOOD_IMAGES.length) {
-      return `https://images.unsplash.com/${CURATED_FOOD_IMAGES[index].id}?auto=format&fit=crop&q=80&w=1000`;
-    }
+export async function generateRecipeImage(prompt: string): Promise<string> {
+  // Bypass image generation because the free API key doesn't support it.
+  // Returning a beautiful default food placeholder image from Unsplash instead.
+  return "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=800&q=80";
+}
     
     throw new Error("Invalid index returned");
   } catch (error) {
