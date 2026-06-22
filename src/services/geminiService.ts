@@ -1,6 +1,7 @@
 import { GoogleGenAI, Type } from "@google/genai";
 
-const getAi = () => new GoogleGenAI({ apiKey: process.env.API_KEY || process.env.GEMINI_API_KEY || '' });
+// Ensure environment variable is used properly
+const getAi = () => new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY || '' });
 
 export interface ExtractedRecipe {
   title: string;
@@ -47,7 +48,7 @@ export async function extractRecipeFromUrl(url: string): Promise<ExtractedRecipe
       model: "gemini-3-flash-preview",
       contents,
       config: {
-        tools: [{ urlContext: {} }, { googleSearch: {} }],
+        tools: [{ googleSearch: {} }],
         responseMimeType: "application/json",
         responseSchema: recipeSchema
       }
@@ -102,7 +103,7 @@ export async function generateRecipe(category: string, details: string): Promise
   return JSON.parse(text) as ExtractedRecipe;
 }
 
-async function compressImage(base64Str: string, maxWidth = 800, quality = 0.7): Promise<string> {
+export async function compressImage(base64Str: string, maxWidth = 800, quality = 0.7): Promise<string> {
   return new Promise((resolve) => {
     const img = new Image();
     img.src = base64Str;
@@ -233,19 +234,14 @@ const CURATED_FOOD_IMAGES = [
   { id: 'photo-1546793665-c74683c3f43d', tags: 'sandwich, lunch, healthy, bread, snack' }
 ];
 
-
-export async function generateRecipeImage(prompt: string): Promise<string> {
+export async function generateRecipeImage(prompt: string, category?: string): Promise<string> {
   // Bypass image generation because the free API key doesn't support it.
-  // Returning a beautiful default food placeholder image from Unsplash instead.
-  return "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=800&q=80";
-}
-    
-    throw new Error("Invalid index returned");
-  } catch (error) {
-    console.error("Failed to select curated image:", error);
-    // Fallback to a random image from the category if possible, or just a generic one
+  try {
     const categoryMatch = CURATED_FOOD_IMAGES.find(img => img.tags.includes((category || '').toLowerCase()));
     const fallbackId = categoryMatch ? categoryMatch.id : CURATED_FOOD_IMAGES[20].id;
     return `https://images.unsplash.com/${fallbackId}?auto=format&fit=crop&q=80&w=1000`;
+  } catch (error) {
+    console.error("Failed to select curated image:", error);
+    return "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=800&q=80";
   }
 }
