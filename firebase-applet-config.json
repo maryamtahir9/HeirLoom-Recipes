@@ -1,0 +1,10 @@
+{
+  "projectId": "root-lacing-j2gpt",
+  "appId": "1:663501012852:web:40192d7353e949c081f621",
+  "apiKey": "AIzaSyAgkhGl9TmA99MMXpsf5WxuUZ3j7avN4qU",
+  "authDomain": "root-lacing-j2gpt.firebaseapp.com",
+  "firestoreDatabaseId": "remixed-firestore-database-id",
+  "storageBucket": "root-lacing-j2gpt.firebasestorage.app",
+  "messagingSenderId": "663501012852",
+  "measurementId": ""
+}

@@ -1,0 +1,8 @@
+{
+  "name": "Remix: Heirloom Recipes",
+  "description": "Organize and import recipes with ease. Collaborate with your household and keep your culinary traditions alive.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
